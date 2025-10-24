@@ -16,6 +16,7 @@ final class SearchViewController: UIViewController {
   private let searchBar: UISearchBar = {
     let searchBar = UISearchBar()
     searchBar.placeholder = "책 제목이나 작가 이름으로 검색하세요"
+    searchBar.searchBarStyle = .minimal
     return searchBar
   }()
 
@@ -31,6 +32,7 @@ final class SearchViewController: UIViewController {
 
   private func setupConfigures() {
     view.backgroundColor = .white
+    navigationController?.isNavigationBarHidden = true
   }
 
   private func setupViews() {
@@ -49,7 +51,7 @@ final class SearchViewController: UIViewController {
     searchBar.snp.makeConstraints { make in
       make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
       make.leading.trailing.equalToSuperview().inset(20)
-      make.height.equalTo(100)
+//      make.height.equalTo(100)
     }
     recentlyReadBooks.snp.makeConstraints { make in
       make.top.equalTo(searchBar.snp.bottom).offset(12)
