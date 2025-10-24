@@ -15,10 +15,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
     guard let scene = (scene as? UIWindowScene) else { return }
     let window = UIWindow(windowScene: scene)
-    let rootVC = ViewController()
-    window.rootViewController = rootVC
+    window.rootViewController = createTabBarController()
     window.makeKeyAndVisible()
     self.window = window
+  }
+
+  private func createTabBarController() -> UITabBarController {
+    let tabBarController = UITabBarController()
+
+    let searchVC = UINavigationController(rootViewController: SearchViewController())
+    let savedBookListVC = UINavigationController(rootViewController: SavedBookListViewController())
+
+    searchVC.tabBarItem = UITabBarItem(title: "검색", image: UIImage(systemName: "magnifyingglass"), tag: 0)
+    savedBookListVC.tabBarItem = UITabBarItem(title: "담은 책", image: UIImage(systemName: "book"), tag: 1)
+
+    tabBarController.viewControllers = [searchVC, savedBookListVC]
+    tabBarController.tabBar.barTintColor = .systemBlue
+
+    return tabBarController
   }
 
   func sceneDidDisconnect(_ scene: UIScene) {

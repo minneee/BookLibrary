@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  SavedBookListViewController.swift
 //  BookLibrary
 //
 //  Created by 김민희 on 10/24/25.
@@ -7,13 +7,9 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-
+final class SavedBookListViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
-    // Do any additional setup after loading the view.
+    view.backgroundColor = .blue
   }
-
-
 }
-

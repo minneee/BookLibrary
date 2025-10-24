@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F23A37162EAB58460004035E /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = F23A37152EAB58460004035E /* SnapKit */; };
+		F23A37192EAB58BD0004035E /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = F23A37182EAB58BD0004035E /* RxCocoa */; };
+		F23A371C2EAB58E30004035E /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = F23A371B2EAB58E30004035E /* Alamofire */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		F23A36F92EAB54B50004035E /* BookLibrary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookLibrary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -14,7 +20,7 @@
 		F23A370E2EAB54B70004035E /* Exceptions for "BookLibrary" folder in "BookLibrary" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				App/Info.plist,
 			);
 			target = F23A36F82EAB54B50004035E /* BookLibrary */;
 		};
@@ -36,6 +42,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F23A371C2EAB58E30004035E /* Alamofire in Frameworks */,
+				F23A37192EAB58BD0004035E /* RxCocoa in Frameworks */,
+				F23A37162EAB58460004035E /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +87,9 @@
 			);
 			name = BookLibrary;
 			packageProductDependencies = (
+				F23A37152EAB58460004035E /* SnapKit */,
+				F23A37182EAB58BD0004035E /* RxCocoa */,
+				F23A371B2EAB58E30004035E /* Alamofire */,
 			);
 			productName = BookLibrary;
 			productReference = F23A36F92EAB54B50004035E /* BookLibrary.app */;
@@ -107,6 +119,11 @@
 			);
 			mainGroup = F23A36F02EAB54B50004035E;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F23A37142EAB58460004035E /* XCRemoteSwiftPackageReference "SnapKit" */,
+				F23A37172EAB58BD0004035E /* XCRemoteSwiftPackageReference "RxSwift" */,
+				F23A371A2EAB58E30004035E /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F23A36FA2EAB54B50004035E /* Products */;
 			projectDirPath = "";
@@ -147,7 +164,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = URUB4S4795;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = BookLibrary/Info.plist;
+				INFOPLIST_FILE = BookLibrary/App/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -179,7 +196,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = URUB4S4795;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = BookLibrary/Info.plist;
+				INFOPLIST_FILE = BookLibrary/App/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -345,6 +362,51 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F23A37142EAB58460004035E /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+		F23A37172EAB58BD0004035E /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.9.0;
+			};
+		};
+		F23A371A2EAB58E30004035E /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F23A37152EAB58460004035E /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F23A37142EAB58460004035E /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		F23A37182EAB58BD0004035E /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F23A37172EAB58BD0004035E /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		F23A371B2EAB58E30004035E /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F23A371A2EAB58E30004035E /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F23A36F12EAB54B50004035E /* Project object */;
 }
