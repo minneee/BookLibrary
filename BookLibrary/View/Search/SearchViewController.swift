@@ -22,6 +22,8 @@ final class SearchViewController: UIViewController {
 
   private let recentlyReadBooks = RecentlyReadBooks()
 
+  private let bookListView = BookListView()
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupConfigures()
@@ -38,7 +40,8 @@ final class SearchViewController: UIViewController {
   private func setupViews() {
     [
       searchBar,
-      recentlyReadBooks
+      recentlyReadBooks,
+      bookListView
     ]
       .forEach {
         view.addSubview($0)
@@ -52,10 +55,17 @@ final class SearchViewController: UIViewController {
       make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
       make.leading.trailing.equalToSuperview().inset(20)
     }
+
     recentlyReadBooks.snp.makeConstraints { make in
       make.top.equalTo(searchBar.snp.bottom).offset(12)
       make.leading.trailing.equalToSuperview().inset(20)
       make.bottom.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
+    }
+
+    bookListView.snp.makeConstraints { make in
+      make.leading.trailing.equalToSuperview()
+      make.top.equalTo(recentlyReadBooks.snp.bottom).offset(15)
+      make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
     }
   }
 }
