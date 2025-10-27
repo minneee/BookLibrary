@@ -28,6 +28,7 @@ final class SearchViewController: UIViewController {
     super.viewDidLoad()
     setupConfigures()
     setupViews()
+    bind()
 
     recentlyReadBooks.bookColors.accept([.systemRed, .systemOrange, .systemYellow, .systemGreen, .systemRed, .systemOrange, .systemYellow, .systemGreen, .systemRed, .systemOrange, .systemYellow, .systemGreen])
   }
@@ -67,6 +68,22 @@ final class SearchViewController: UIViewController {
       make.top.equalTo(recentlyReadBooks.snp.bottom).offset(15)
       make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
     }
+  }
+
+  private func bind() {
+    bookListView.selectedBook
+      .subscribe { [weak self] book in
+        guard let self else { return }
+        let detailVC = BookDetailViewController()
+
+        if let sheet = detailVC.sheetPresentationController {
+          sheet.detents = [.large()]
+          sheet.prefersGrabberVisible = true
+          sheet.preferredCornerRadius = 20
+        }
+        self.present(detailVC, animated: true)
+      }
+      .disposed(by: disposeBag)
   }
 }
 
