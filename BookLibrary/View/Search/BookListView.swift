@@ -10,11 +10,8 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-enum Section: Hashable, Sendable {
-  case main
-}
-
 final class BookListView: UIView {
+  let selectedBook = PublishRelay<Book>()
 
   let bookRelay: BehaviorRelay<[Book]> = .init(value: [Book(title: "title", contents: "", authors: ["Aa", "Bb"], thumbnail: "", price: 0), Book(title: "title", contents: "", authors: ["Aa", "Bb"], thumbnail: "", price: 0), Book(title: "title", contents: "", authors: ["Aa", "Bb"], thumbnail: "", price: 0), Book(title: "title", contents: "", authors: ["Aa", "Bb"], thumbnail: "", price: 0), Book(title: "title", contents: "", authors: ["Aa", "Bb"], thumbnail: "", price: 0), Book(title: "title", contents: "", authors: ["Aa", "Bb"], thumbnail: "", price: 0), Book(title: "title", contents: "", authors: ["Aa", "Bb"], thumbnail: "", price: 0), Book(title: "title", contents: "", authors: ["Aa", "Bb"], thumbnail: "", price: 0)])
   private let disposeBag = DisposeBag()
@@ -95,10 +92,8 @@ extension BookListView {
     }
     .disposed(by: disposeBag)
 
-    collectionView.rx.modelSelected(String.self)
-      .subscribe(onNext: { item in
-        print("Selected \(item)")
-      })
+    collectionView.rx.modelSelected(Book.self)
+      .bind(to: selectedBook)
       .disposed(by: disposeBag)
   }
 }
