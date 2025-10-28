@@ -51,7 +51,6 @@ final class SearchViewController: UIViewController {
     searchBar.snp.makeConstraints { make in
       make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
       make.leading.trailing.equalToSuperview().inset(20)
-//      make.height.equalTo(100)
     }
     recentlyReadBooks.snp.makeConstraints { make in
       make.top.equalTo(searchBar.snp.bottom).offset(12)
