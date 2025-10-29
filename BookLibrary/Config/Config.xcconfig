@@ -1,0 +1,8 @@
+//
+//  Config.xcconfig
+//  BookLibrary
+//
+//  Created by 김민희 on 10/28/25.
+//
+
+KAKAO_API_KEY = 6f9e25bc4183e94d2ff4c5fdc4b6743a

@@ -26,3 +26,4 @@ playground.xcworkspace
 *.log
 tmp/
 
+Config/*.xcconfig
