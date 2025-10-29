@@ -13,27 +13,51 @@ final class BookCell: UICollectionViewCell {
 
   private let titleLabel: UILabel = {
     let label = UILabel()
-    label.numberOfLines = 0
+    label.numberOfLines = 1
+    label.lineBreakMode = .byTruncatingTail
+    label.textAlignment = .left
+    label.font = .systemFont(ofSize: 16, weight: .semibold)
     return label
   }()
 
   private let authorLabel: UILabel = {
     let label = UILabel()
-    label.numberOfLines = 0
+    label.numberOfLines = 1
+        label.lineBreakMode = .byTruncatingTail
+        label.textAlignment = .left
+    label.textColor = .gray
+    label.font = .systemFont(ofSize: 14, weight: .regular)
     return label
   }()
   
   private let priceLabel: UILabel = {
     let label = UILabel()
-    label.numberOfLines = 0
+    label.textAlignment = .right
+    label.setContentHuggingPriority(.required, for: .horizontal)
+    label.setContentCompressionResistancePriority(.required, for: .horizontal)
     return label
+  }()
+
+  private lazy var textStack: UIStackView = {
+    let stack = UIStackView()
+    stack.axis = .vertical
+    stack.alignment = .leading
+    stack.spacing = 4
+    return stack
+  }()
+
+  private lazy var mainStack: UIStackView = {
+    let stack = UIStackView()
+    stack.axis = .horizontal
+    stack.alignment = .center
+    stack.spacing = 12
+    return stack
   }()
 
   override init(frame: CGRect) {
     super .init(frame: frame)
     setupConfigures()
     setupViews()
-    bind()
   }
   
   required init?(coder: NSCoder) {
@@ -43,7 +67,7 @@ final class BookCell: UICollectionViewCell {
   func configure(book: Book) {
     titleLabel.text = book.title
     authorLabel.text = book.authors.joined(separator: ", ")
-    priceLabel.text = "\(book.price)"
+    priceLabel.text = "\(book.price)원"
   }
 }
 
@@ -54,36 +78,35 @@ extension BookCell {
   
   private func setupViews() {
     [
+      mainStack
+    ]
+      .forEach {
+        contentView.addSubview($0)
+      }
+
+    [
       titleLabel,
-      authorLabel,
+      authorLabel
+    ]
+      .forEach {
+        textStack.addArrangedSubview($0)
+      }
+
+    [
+      textStack,
       priceLabel
     ]
       .forEach {
-      contentView.addSubview($0)
-    }
+        mainStack.addArrangedSubview($0)
+      }
 
     setupConstraints()
   }
 
   private func setupConstraints() {
-    titleLabel.snp.makeConstraints { make in
-      make.top.equalToSuperview().inset(12)
+    mainStack.snp.makeConstraints { make in
+      make.top.bottom.equalToSuperview().inset(12)
       make.leading.trailing.equalToSuperview().inset(20)
     }
-    
-    authorLabel.snp.makeConstraints { make in
-      make.top.equalTo(titleLabel.snp.bottom).offset(8)
-      make.leading.trailing.equalTo(titleLabel)
-    }
-
-    priceLabel.snp.makeConstraints { make in
-      make.top.equalTo(authorLabel.snp.bottom).offset(8)
-      make.leading.trailing.equalTo(titleLabel)
-      make.bottom.equalToSuperview().inset(12)
-    }
-  }
-
-  private func bind() {
-
   }
 }
