@@ -49,3 +49,9 @@ final class APIClient {
     }
   }
 }
+
+extension APIClient {
+  func request<T: Decodable>(_ api: BookAPI) -> Single<T> {
+    request(api.url, method: api.method, parameters: api.parameters)
+  }
+}
