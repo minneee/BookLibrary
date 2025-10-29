@@ -14,3 +14,13 @@ struct Book: Decodable {
   let thumbnail: String?
   let price: Int
 }
+
+extension Book {
+  init(entity: BookEntity) {
+    self.title = entity.title ?? ""
+    self.contents = entity.contents ?? ""
+    self.authors = entity.authors?.components(separatedBy: ", ") ?? []
+    self.thumbnail = entity.thumbnail
+    self.price = Int(entity.price)
+  }
+}
