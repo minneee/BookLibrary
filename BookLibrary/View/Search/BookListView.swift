@@ -13,7 +13,7 @@ import RxCocoa
 final class BookListView: UIView {
   let selectedBook = PublishRelay<Book>()
 
-  let bookRelay: BehaviorRelay<[Book]> = .init(value: [Book(title: "title", contents: "", authors: ["Aa", "Bb"], thumbnail: "", price: 0), Book(title: "title", contents: "", authors: ["Aa", "Bb"], thumbnail: "", price: 0), Book(title: "title", contents: "", authors: ["Aa", "Bb"], thumbnail: "", price: 0), Book(title: "title", contents: "", authors: ["Aa", "Bb"], thumbnail: "", price: 0), Book(title: "title", contents: "", authors: ["Aa", "Bb"], thumbnail: "", price: 0), Book(title: "title", contents: "", authors: ["Aa", "Bb"], thumbnail: "", price: 0), Book(title: "title", contents: "", authors: ["Aa", "Bb"], thumbnail: "", price: 0), Book(title: "title", contents: "", authors: ["Aa", "Bb"], thumbnail: "", price: 0)])
+  let bookRelay: BehaviorRelay<[Book]> = .init(value: [])
   private let disposeBag = DisposeBag()
 
   private let titleLabel: UILabel = {
@@ -46,6 +46,20 @@ final class BookListView: UIView {
     return cv
   }()
 
+  private let emptyView: UIView = {
+    let view = UIView()
+    let label = UILabel()
+    label.text = "검색 결과가 없습니다."
+    label.font = .systemFont(ofSize: 18, weight: .medium)
+    label.textColor = .lightGray
+    label.textAlignment = .center
+    view.addSubview(label)
+    label.snp.makeConstraints { make in
+      make.center.equalToSuperview()
+    }
+    return view
+  }()
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupConfigures()
@@ -66,7 +80,8 @@ extension BookListView {
   private func setupViews() {
     [
       titleLabel,
-      collectionView
+      collectionView,
+      emptyView
     ]
       .forEach {
         addSubview($0)
@@ -84,6 +99,11 @@ extension BookListView {
       make.leading.trailing.bottom.equalToSuperview()
       make.top.equalTo(titleLabel.snp.bottom).offset(15)
     }
+
+    emptyView.snp.makeConstraints { make in
+      make.leading.trailing.bottom.equalToSuperview()
+      make.top.equalTo(titleLabel.snp.bottom).offset(15)
+    }
   }
 
   private func bind() {
@@ -94,6 +114,19 @@ extension BookListView {
 
     collectionView.rx.modelSelected(Book.self)
       .bind(to: selectedBook)
+      .disposed(by: disposeBag)
+
+    bookRelay
+      .map { $0.isEmpty }
+      .distinctUntilChanged()
+      .observe(on: MainScheduler.instance)
+      .subscribe(onNext: { [weak self] isEmpty in
+        guard let self else { return }
+        UIView.transition(with: self, duration: 0.25, options: .transitionCrossDissolve) {
+          self.emptyView.isHidden = !isEmpty
+          self.collectionView.isHidden = isEmpty
+        }
+      })
       .disposed(by: disposeBag)
   }
 }

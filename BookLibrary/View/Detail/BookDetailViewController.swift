@@ -19,7 +19,7 @@ class BookDetailViewController: UIViewController {
 
   private let titleLabel: UILabel = {
     let label = UILabel()
-    label.text = "책제목책제목책제목책제목책제목책제목책제목책제목책제목책제목책제목책제목책제목"
+    label.text = "책제목"
     label.font = .systemFont(ofSize: 24, weight: .bold)
     label.textAlignment = .center
     label.numberOfLines = 0
@@ -28,7 +28,7 @@ class BookDetailViewController: UIViewController {
 
   private let authorLabel: UILabel = {
     let label = UILabel()
-    label.text = "작가, 작가, 작가, 작가"
+    label.text = "작가"
     label.font = .systemFont(ofSize: 16, weight: .medium)
     label.textAlignment = .center
     label.numberOfLines = 0
@@ -40,13 +40,12 @@ class BookDetailViewController: UIViewController {
     imageView.image = UIImage(named: "book_sample")
     imageView.clipsToBounds = true
     imageView.contentMode = .scaleAspectFit
-    imageView.backgroundColor = .gray
     return imageView
   }()
 
   private let priceLabel: UILabel = {
     let label = UILabel()
-    label.text = "14,000원"
+    label.text = "- 원"
     label.font = .systemFont(ofSize: 16, weight: .medium)
     label.textAlignment = .center
     label.numberOfLines = 0
@@ -55,7 +54,7 @@ class BookDetailViewController: UIViewController {
 
   private let descriptionLabel: UILabel = {
     let label = UILabel()
-    label.text = "인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다.인간은 변할 수 있고, 누구나 행복해질 수 있다. 단 그러기 위해서는 '용기'가 필요하다고 말한 철학자가 있다. 바로 '세이노'이다."
+    label.text = "설명"
     label.font = .systemFont(ofSize: 14, weight: .regular)
     label.numberOfLines = 0
     return label
@@ -91,11 +90,23 @@ class BookDetailViewController: UIViewController {
     return button
   }()
 
+  private let book: Book
+
+  init(book: Book) {
+    self.book = book
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     setupConfigures()
     setupViews()
     bind()
+    configure(book: book)
   }
 }
 
@@ -205,4 +216,24 @@ extension BookDetailViewController {
    @objc private func addBook() {
      print("책 담기!")
    }
+
+  private func configure(book: Book) {
+    titleLabel.text = book.title
+    authorLabel.text = book.authors.joined(separator: ", ")
+    descriptionLabel.text = book.contents
+    priceLabel.text = "\(book.price)원"
+
+    if let thumbnail = book.thumbnail, let url = URL(string: thumbnail) {
+      DispatchQueue.global().async {
+        if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
+          DispatchQueue.main.async {
+            self.thumbnailImageView.image = image
+          }
+        }
+      }
+    } else {
+      thumbnailImageView.image = nil
+      thumbnailImageView.backgroundColor = .gray
+    }
+  }
 }

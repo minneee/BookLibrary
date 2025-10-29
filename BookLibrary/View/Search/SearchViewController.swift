@@ -76,7 +76,7 @@ final class SearchViewController: UIViewController {
 
     bookListView.snp.makeConstraints { make in
       make.leading.trailing.equalToSuperview()
-      make.top.equalTo(recentlyReadBooks.snp.bottom).offset(15)
+      make.top.equalTo(recentlyReadBooks.snp.bottom).offset(30)
       make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
     }
   }
@@ -104,7 +104,7 @@ final class SearchViewController: UIViewController {
     bookListView.selectedBook
       .subscribe { [weak self] book in
         guard let self else { return }
-        let detailVC = BookDetailViewController()
+        let detailVC = BookDetailViewController(book: book)
 
         if let sheet = detailVC.sheetPresentationController {
           sheet.detents = [.large()]
