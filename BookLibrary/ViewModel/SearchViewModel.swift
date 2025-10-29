@@ -7,6 +7,7 @@
 
 import RxSwift
 import RxCocoa
+import Foundation
 
 final class SearchViewModel {
   struct Input {
@@ -27,12 +28,16 @@ final class SearchViewModel {
 
   func transform(input: Input) -> Output {
     let searchResult = input.searchText
+      .asObservable()
+      .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
+      .distinctUntilChanged()
+      .filter { !$0.isEmpty }
       .flatMapLatest { query in
-        useCase.execute(query: query)
+        self.useCase.execute(query: query)
           .asObservable()
           .materialize()
       }
-      .share()
+      .share(replay: 1, scope: .whileConnected)
 
     let books = searchResult
       .compactMap { $0.element }
