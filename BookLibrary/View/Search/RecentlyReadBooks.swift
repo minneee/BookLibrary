@@ -53,6 +53,7 @@ final class RecentlyReadBooks: UIView {
 extension RecentlyReadBooks {
   private func setupConfigures() {
     backgroundColor = .white
+    scrollView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
   }
 
   private func setupViews() {
@@ -72,7 +73,6 @@ extension RecentlyReadBooks {
   private func setupConstraints() {
     titleLable.snp.makeConstraints { make in
       make.top.leading.trailing.equalToSuperview().inset(20)
-      make.leading.trailing.equalToSuperview()
     }
 
     scrollView.snp.makeConstraints { make in
