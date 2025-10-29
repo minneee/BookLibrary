@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import CoreData
 
 class BookDetailViewController: UIViewController {
   private let scrollView: UIScrollView = {
@@ -91,16 +92,18 @@ class BookDetailViewController: UIViewController {
   }()
 
   private let book: Book
+  private let useCase: SavedBooksUseCaseProtocol
 
-  init(book: Book) {
+  init(book: Book, useCase: SavedBooksUseCaseProtocol) {
     self.book = book
+    self.useCase = useCase
     super.init(nibName: nil, bundle: nil)
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupConfigures()
@@ -210,12 +213,22 @@ extension BookDetailViewController {
   }
 
   @objc private func dismissView() {
-     dismiss(animated: true)
-   }
+    dismiss(animated: true)
+  }
 
-   @objc private func addBook() {
-     print("책 담기!")
-   }
+  @objc private func addBook() {
+    useCase.saveBook(book)
+
+    let alert = UIAlertController(
+      title: "책 담기 완료 📚",
+      message: "‘\(book.title)’을(를) 내 서재에 추가했습니다.",
+      preferredStyle: .alert
+    )
+    alert.addAction(UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+      self?.dismiss(animated: true)
+    })
+    present(alert, animated: true)
+  }
 
   private func configure(book: Book) {
     titleLabel.text = book.title

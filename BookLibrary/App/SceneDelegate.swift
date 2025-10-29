@@ -26,11 +26,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   private func createTabBarController() -> UITabBarController {
     let tabBarController = UITabBarController()
 
-    let repository = BookRepository()
-    let useCase = SearchBooksUseCase(repository: repository)
-    let viewModel = SearchViewModel(useCase: useCase)
-    let searchVC = UINavigationController(rootViewController: SearchViewController(viewModel: viewModel))
-    let savedBookListVC = UINavigationController(rootViewController: SavedBookListViewController())
+    let searchRepository = BookRepository()
+    let searchUseCase = SearchBooksUseCase(repository: searchRepository)
+    let savedBookRepository = SavedBookRepository()
+    let savedBookUseCase = SavedBooksUseCase(repository: savedBookRepository)
+    let searchviewModel = SearchViewModel(useCase: searchUseCase)
+    let searchVC = UINavigationController(rootViewController: SearchViewController(viewModel: searchviewModel, useCase: savedBookUseCase))
+
+
+    let savedRepository = SavedBookRepository()
+    let savedUseCase = SavedBooksUseCase(repository: savedRepository)
+    let savedViewModel = SavedBookListViewModel(useCase: savedUseCase)
+    let savedBookListVC = UINavigationController(rootViewController: SavedBookListViewController(viewModel: savedViewModel))
 
     searchVC.tabBarItem = UITabBarItem(title: "검색", image: UIImage(systemName: "magnifyingglass"), tag: 0)
     savedBookListVC.tabBarItem = UITabBarItem(title: "담은 책", image: UIImage(systemName: "book"), tag: 1)
