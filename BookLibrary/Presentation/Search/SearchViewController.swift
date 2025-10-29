@@ -25,9 +25,11 @@ final class SearchViewController: UIViewController {
   private let bookListView = BookListView()
 
   private let viewModel: SearchViewModel
+  private let useCase: SavedBooksUseCaseProtocol
 
-  init(viewModel: SearchViewModel) {
+  init(viewModel: SearchViewModel, useCase: SavedBooksUseCaseProtocol) {
     self.viewModel = viewModel
+    self.useCase = useCase
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -116,7 +118,7 @@ final class SearchViewController: UIViewController {
     bookListView.selectedBook
       .subscribe { [weak self] book in
         guard let self else { return }
-        let detailVC = BookDetailViewController(book: book)
+        let detailVC = BookDetailViewController(book: book, useCase: useCase)
 
         if let sheet = detailVC.sheetPresentationController {
           sheet.detents = [.large()]
