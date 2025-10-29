@@ -26,7 +26,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   private func createTabBarController() -> UITabBarController {
     let tabBarController = UITabBarController()
 
-    let searchVC = UINavigationController(rootViewController: SearchViewController())
+    let repository = BookRepository()
+    let useCase = SearchBooksUseCase(repository: repository)
+    let viewModel = SearchViewModel(useCase: useCase)
+    let searchVC = UINavigationController(rootViewController: SearchViewController(viewModel: viewModel))
     let savedBookListVC = UINavigationController(rootViewController: SavedBookListViewController())
 
     searchVC.tabBarItem = UITabBarItem(title: "검색", image: UIImage(systemName: "magnifyingglass"), tag: 0)
