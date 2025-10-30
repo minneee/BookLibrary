@@ -8,12 +8,12 @@
 import RxSwift
 
 final class BookRepository: BookRepositoryProtocol {
-  func searchBooks(query: String) -> Single<[Book]> {
-    let api = BookAPI.search(query: query, sort: nil, page: 1, size: 20, target: nil)
+  func searchBooks(query: String, page: Int, size: Int) -> Single<BookSearch> {
+    let api = BookAPI.search(query: query, sort: nil, page: page, size: size, target: nil)
 
     return APIClient.shared.request(api)
       .map { (response: BookSearchResponseDTO) in
-        response.documents.map { $0.toDomain() }
+        response.toDomain()
       }
   }
 }

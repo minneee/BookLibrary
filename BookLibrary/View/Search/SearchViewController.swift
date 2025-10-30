@@ -82,8 +82,20 @@ final class SearchViewController: UIViewController {
   }
 
   private func bind() {
+    let loadNextPageTrigger = bookListView.collectionView.rx.didScroll
+      .asDriver()
+      .filter { [weak self] in
+        guard let self = self else { return false }
+        let offsetY = self.bookListView.collectionView.contentOffset.y
+        let contentHeight = self.bookListView.collectionView.contentSize.height
+        let height = self.bookListView.collectionView.frame.size.height
+        return offsetY > contentHeight - height - 100
+      }
+      .map { _ in () }
+
     let input = SearchViewModel.Input(
-      searchText: searchBar.rx.text.orEmpty.asDriver()
+      searchText: searchBar.rx.text.orEmpty.asDriver(),
+      loadNextPageTrigger: loadNextPageTrigger
     )
 
     let output = viewModel.transform(input: input)
@@ -93,12 +105,12 @@ final class SearchViewController: UIViewController {
       .disposed(by: disposeBag)
 
     output.error
-      .drive { [weak self] message in
+      .drive(onNext: { [weak self] message in
         guard !message.isEmpty else { return }
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "확인", style: .default))
         self?.present(alert, animated: true)
-      }
+      })
       .disposed(by: disposeBag)
 
     bookListView.selectedBook

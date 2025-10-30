@@ -23,7 +23,7 @@ final class BookListView: UIView {
     return label
   }()
 
-  private lazy var collectionView: UICollectionView = {
+  lazy var collectionView: UICollectionView = {
     let layout = UICollectionViewCompositionalLayout { _, _ -> NSCollectionLayoutSection? in
       let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(50))
       let item = NSCollectionLayoutItem(layoutSize: itemSize)

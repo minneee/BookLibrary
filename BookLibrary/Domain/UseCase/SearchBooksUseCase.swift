@@ -8,7 +8,7 @@
 import RxSwift
 
 protocol SearchBooksUseCaseProtocol {
-  func execute(query: String) -> Single<[Book]>
+  func execute(query: String, page: Int, size: Int) -> Single<BookSearch>
 }
 
 final class SearchBooksUseCase: SearchBooksUseCaseProtocol {
@@ -18,7 +18,7 @@ final class SearchBooksUseCase: SearchBooksUseCaseProtocol {
     self.repository = repository
   }
 
-  func execute(query: String) -> Single<[Book]> {
-    repository.searchBooks(query: query)
+  func execute(query: String, page: Int, size: Int) -> Single<BookSearch> {
+    repository.searchBooks(query: query, page: page, size: size)
   }
 }

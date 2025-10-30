@@ -12,6 +12,7 @@ import Foundation
 final class SearchViewModel {
   struct Input {
     let searchText: Driver<String>
+    let loadNextPageTrigger: Driver<Void>
   }
 
   struct Output {
@@ -22,32 +23,62 @@ final class SearchViewModel {
   private let disposeBag = DisposeBag()
   private let useCase: SearchBooksUseCaseProtocol
 
+  private var currentQuery: String = ""
+  private var currentPage: Int = 1
+  private var isEnd: Bool = false
+  private var allBooks: [Book] = []
+  private let pageSize: Int = 20
+
   init(useCase: SearchBooksUseCaseProtocol) {
     self.useCase = useCase
   }
 
   func transform(input: Input) -> Output {
-    let searchResult = input.searchText
-      .asObservable()
-      .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
+    let errorSubject = PublishSubject<String>()
+    let booksRelay = BehaviorRelay<[Book]>(value: [])
+
+    input.searchText
+      .skip(1)
+      .debounce(.milliseconds(300))
       .distinctUntilChanged()
-      .filter { !$0.isEmpty }
-      .flatMapLatest { query in
-        self.useCase.execute(query: query)
-          .asObservable()
-          .materialize()
-      }
-      .share(replay: 1, scope: .whileConnected)
+      .drive(onNext: { [weak self] query in
+        guard let self = self, !query.isEmpty else { return }
+        self.currentQuery = query
+        self.currentPage = 1
+        self.isEnd = false
+        self.allBooks = []
+        self.fetchBooks(booksRelay: booksRelay, errorSubject: errorSubject)
+      })
+      .disposed(by: disposeBag)
 
-    let books = searchResult
-      .compactMap { $0.element }
-      .asDriver(onErrorJustReturn: [])
+    input.loadNextPageTrigger
+      .drive(onNext: { [weak self] in
+        guard let self = self else { return }
+        guard !self.isEnd else { return }
+        self.currentPage += 1
+        self.fetchBooks(booksRelay: booksRelay, errorSubject: errorSubject)
+      })
+      .disposed(by: disposeBag)
 
-    let error = searchResult
-      .compactMap { $0.error }
-      .map { $0.localizedDescription }
-      .asDriver(onErrorJustReturn: "Unknown error")
+    return Output(
+      books: booksRelay.asDriver(),
+      error: errorSubject.asDriver(onErrorJustReturn: "Unknown Error")
+    )
+  }
 
-    return Output(books: books, error: error)
+  private func fetchBooks(booksRelay: BehaviorRelay<[Book]>, errorSubject: PublishSubject<String>) {
+    useCase.execute(query: currentQuery, page: currentPage, size: pageSize)
+      .subscribe(
+        onSuccess: { [weak self] response in
+          guard let self = self else { return }
+          self.isEnd = response.isEnd
+          self.allBooks.append(contentsOf: response.books)
+          booksRelay.accept(self.allBooks)
+        },
+        onFailure: { error in
+          errorSubject.onNext(error.localizedDescription)
+        }
+      )
+      .disposed(by: disposeBag)
   }
 }

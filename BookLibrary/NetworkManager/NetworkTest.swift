@@ -15,12 +15,15 @@ final class NetworkTest {
   func runTest() {
     let repository = BookRepository()
 
-    repository.searchBooks(query: "클린 아키텍처")
+    repository.searchBooks(query: "클린 아키텍처", page: 1, size: 20)
       .subscribe(
-        onSuccess: { books in
+        onSuccess: { response in
+          let books = response.books
           print("✅ 검색 결과 \(books.count)개")
-          for book in books.prefix(3) { // 처음 3개만 출력
-            print("📘 \(book.title) / \(book.authors)")
+          print("📄 마지막 페이지 여부: \(response.isEnd ? "✅ 마지막 페이지" : "⏭ 다음 페이지 있음")")
+
+          for book in books.prefix(3) {
+            print("📘 \(book.title) / \(book.authors.joined(separator: ","))")
           }
         },
         onFailure: { error in

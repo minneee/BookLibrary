@@ -9,18 +9,16 @@ import Foundation
 import Alamofire
 
 enum BookAPI {
-  case search(query: String, sort: String?, page: Int?, size: Int?, target: String?)
-  
+  case search(query: String, sort: String?, page: Int, size: Int, target: String?)
+
   var path: String { "/v3/search/book" }
   var method: HTTPMethod { .get }
   
   var parameters: Parameters {
     switch self {
     case let .search(query, sort, page, size, target):
-      var params: Parameters = ["query": query]
+      var params: Parameters = ["query": query, "page": page, "size": size]
       if let sort = sort { params["sort"] = sort }
-      if let page = page { params["page"] = page }
-      if let size = size { params["size"] = size }
       if let target = target { params["target"] = target }
       return params
     }
