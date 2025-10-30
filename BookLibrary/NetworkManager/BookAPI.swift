@@ -9,22 +9,37 @@ import Foundation
 import Alamofire
 
 enum BookAPI {
-  case search(query: String, sort: String?, page: Int, size: Int, target: String?)
+  case search(BookSearchRequestDTO)
+}
 
-  var path: String { "/v3/search/book" }
-  var method: HTTPMethod { .get }
-  
-  var parameters: Parameters {
+extension BookAPI: URLRequestConvertible {
+  var path: String {
     switch self {
-    case let .search(query, sort, page, size, target):
-      var params: Parameters = ["query": query, "page": page, "size": size]
-      if let sort = sort { params["sort"] = sort }
-      if let target = target { params["target"] = target }
-      return params
+    case .search: return "/v3/search/book"
     }
   }
-  
-  var url: String {
-    return APIConstant.baseURL + path
+
+  var method: HTTPMethod {
+    switch self {
+    case .search:
+      return .get
+    }
+  }
+
+  var url: URL {
+    return URL(string: APIConstant.baseURL + path)!
+  }
+
+  func asURLRequest() throws -> URLRequest {
+    var request = try URLRequest(url: url, method: method)
+    request.setValue("KakaoAK \(APIKeyManager.kakao)", forHTTPHeaderField: "Authorization")
+
+    switch self {
+    case .search(let requestDTO):
+      request = try URLEncodedFormParameterEncoder(destination: .methodDependent)
+        .encode(requestDTO, into: request)
+    }
+
+    return request
   }
 }
