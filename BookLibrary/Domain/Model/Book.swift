@@ -23,4 +23,12 @@ extension Book {
     self.thumbnail = entity.thumbnail
     self.price = Int(entity.price)
   }
+
+  init(recentEntity: RecentBookEntity) {
+    self.title = recentEntity.title ?? ""
+    self.contents = recentEntity.contents ?? ""
+    self.authors = recentEntity.authors?.components(separatedBy: ", ") ?? []
+    self.thumbnail = recentEntity.thumbnail
+    self.price = Int(recentEntity.price)
+  }
 }

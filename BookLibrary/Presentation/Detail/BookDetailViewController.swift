@@ -92,11 +92,13 @@ class BookDetailViewController: UIViewController {
   }()
 
   private let book: Book
-  private let useCase: SavedBooksUseCaseProtocol
+  private let savedBooksUseCase: SavedBooksUseCaseProtocol
+  private let recentBooksUseCase: RecentBooksUseCaseProtocol
 
-  init(book: Book, useCase: SavedBooksUseCaseProtocol) {
+  init(book: Book, savedBooksUseCase: SavedBooksUseCaseProtocol, recentBooksUseCase: RecentBooksUseCaseProtocol) {
     self.book = book
-    self.useCase = useCase
+    self.savedBooksUseCase = savedBooksUseCase
+    self.recentBooksUseCase = recentBooksUseCase
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -111,11 +113,17 @@ class BookDetailViewController: UIViewController {
     bind()
     configure(book: book)
   }
+
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    NotificationCenter.default.post(name: .didDismissDetail, object: nil)
+  }
 }
 
 extension BookDetailViewController {
   private func setupConfigures() {
     view.backgroundColor = .white
+    recentBooksUseCase.addRecentBook(book)
   }
 
   private func setupViews() {
@@ -217,7 +225,7 @@ extension BookDetailViewController {
   }
 
   @objc private func addBook() {
-    useCase.saveBook(book)
+    savedBooksUseCase.saveBook(book)
 
     let alert = UIAlertController(
       title: "책 담기 완료 📚",
@@ -249,4 +257,8 @@ extension BookDetailViewController {
       thumbnailImageView.backgroundColor = .gray
     }
   }
+}
+
+extension Notification.Name {
+  static let didDismissDetail = Notification.Name("didDismissDetail")
 }

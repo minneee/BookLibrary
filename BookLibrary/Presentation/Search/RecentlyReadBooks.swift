@@ -14,7 +14,7 @@ final class RecentlyReadBooks: UIView {
   private let disposeBag = DisposeBag()
   private let bookImageSize = 100
 
-  private let titleLable: UILabel = {
+  private let titleLabel: UILabel = {
     let label = UILabel()
     label.text = "최근 읽은 책"
     label.font = .systemFont(ofSize: 20, weight: .bold)
@@ -36,15 +36,12 @@ final class RecentlyReadBooks: UIView {
     return stackView
   }()
 
-  let bookColors = PublishRelay<[UIColor]>()
-
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupConfigures()
     setupViews()
-    bind()
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -58,7 +55,7 @@ extension RecentlyReadBooks {
 
   private func setupViews() {
     [
-      titleLable,
+      titleLabel,
       scrollView
     ]
       .forEach {
@@ -71,12 +68,12 @@ extension RecentlyReadBooks {
   }
 
   private func setupConstraints() {
-    titleLable.snp.makeConstraints { make in
+    titleLabel.snp.makeConstraints { make in
       make.top.leading.trailing.equalToSuperview().inset(20)
     }
 
     scrollView.snp.makeConstraints { make in
-      make.top.equalTo(titleLable.snp.bottom).offset(12)
+      make.top.equalTo(titleLabel.snp.bottom).offset(12)
       make.leading.trailing.bottom.equalToSuperview()
       make.height.equalTo(bookImageSize)
     }
@@ -87,27 +84,57 @@ extension RecentlyReadBooks {
     }
   }
 
-  private func bind() {
-    bookColors
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { [weak self] colors in
-        guard let self = self else { return }
-        self.stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+  func update(with books: [Book]) {
+    stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
-        for color in colors {
-          let circleView = UIView()
-          circleView.backgroundColor = color
-          circleView.layer.cornerRadius = CGFloat(self.bookImageSize) / 2
-          circleView.clipsToBounds = true
+    if books.isEmpty {
+      let emptyView = UIView()
+      let label = UILabel()
+      label.text = "최근 읽은 책이 없습니다"
+      label.textColor = .systemGray
+      label.font = .systemFont(ofSize: 14)
+      label.textAlignment = .center
 
-          circleView.snp.makeConstraints { make in
-            make.width.height.equalTo(self.bookImageSize)
+      emptyView.addSubview(label)
+
+      label.snp.makeConstraints { make in
+        make.center.equalToSuperview()
+        make.leading.trailing.equalToSuperview()
+      }
+
+      emptyView.snp.makeConstraints { make in
+        make.height.equalTo(bookImageSize)
+      }
+
+      stackView.addArrangedSubview(emptyView)
+      isHidden = true
+      return
+    }
+
+    isHidden = false
+
+    for book in books {
+      let imageView = UIImageView()
+      imageView.layer.cornerRadius = CGFloat(bookImageSize) / 2
+      imageView.clipsToBounds = true
+      imageView.contentMode = .scaleAspectFill
+
+      if let urlStr = book.thumbnail, let url = URL(string: urlStr) {
+        DispatchQueue.global().async {
+          if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
+            DispatchQueue.main.async { imageView.image = image }
           }
-
-          self.stackView.addArrangedSubview(circleView)
         }
-      })
-      .disposed(by: disposeBag)
+      } else {
+        imageView.image = UIImage(named: "book_sample")
+        imageView.backgroundColor = .systemGray4
+      }
+
+      imageView.snp.makeConstraints { make in
+        make.width.height.equalTo(bookImageSize)
+      }
+      stackView.addArrangedSubview(imageView)
+    }
   }
 }
 
