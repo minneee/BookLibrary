@@ -24,3 +24,12 @@ struct MetaDTO: Codable {
     case isEnd = "is_end"
   }
 }
+
+extension BookSearchResponseDTO {
+  func toDomain() -> BookSearch {
+    return BookSearch(
+      books: documents.map { $0.toDomain() },
+      isEnd: meta.isEnd
+    )
+  }
+}

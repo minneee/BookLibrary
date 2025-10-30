@@ -8,6 +8,6 @@
 import RxSwift
 
 protocol BookRepositoryProtocol {
-  func searchBooks(query: String) -> Single<[Book]>
+  func searchBooks(query: String, page: Int, size: Int) -> Single<BookSearch>
 }
 
