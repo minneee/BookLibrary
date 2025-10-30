@@ -38,7 +38,7 @@ final class BookCell: UICollectionViewCell {
     return label
   }()
 
-  private lazy var textStack: UIStackView = {
+  private var textStack: UIStackView = {
     let stack = UIStackView()
     stack.axis = .vertical
     stack.alignment = .leading
@@ -46,7 +46,7 @@ final class BookCell: UICollectionViewCell {
     return stack
   }()
 
-  private lazy var mainStack: UIStackView = {
+  private var mainStack: UIStackView = {
     let stack = UIStackView()
     stack.axis = .horizontal
     stack.alignment = .center
