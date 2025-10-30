@@ -8,8 +8,12 @@
 import UIKit
 import SnapKit
 import CoreData
+import RxSwift
+import RxCocoa
 
 class BookDetailViewController: UIViewController {
+  private let disposeBag = DisposeBag()
+
   private let scrollView: UIScrollView = {
     let scrollView = UIScrollView()
     scrollView.showsVerticalScrollIndicator = false
@@ -216,26 +220,28 @@ extension BookDetailViewController {
   }
 
   private func bind() {
-    cancelButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
-    addToLibraryButton.addTarget(self, action: #selector(addBook), for: .touchUpInside)
-  }
+    cancelButton.rx.tap
+      .bind { [weak self] in
+        self?.dismiss(animated: true)
+      }
+      .disposed(by: disposeBag)
 
-  @objc private func dismissView() {
-    dismiss(animated: true)
-  }
+    addToLibraryButton.rx.tap
+      .bind { [weak self] in
+        guard let self else { return }
+        self.savedBooksUseCase.saveBook(self.book)
 
-  @objc private func addBook() {
-    savedBooksUseCase.saveBook(book)
-
-    let alert = UIAlertController(
-      title: "책 담기 완료 📚",
-      message: "‘\(book.title)’을(를) 내 서재에 추가했습니다.",
-      preferredStyle: .alert
-    )
-    alert.addAction(UIAlertAction(title: "확인", style: .default) { [weak self] _ in
-      self?.dismiss(animated: true)
-    })
-    present(alert, animated: true)
+        let alert = UIAlertController(
+          title: "책 담기 완료 📚",
+          message: "‘\(self.book.title)’을(를) 내 서재에 추가했습니다.",
+          preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+          self?.dismiss(animated: true)
+        })
+        self.present(alert, animated: true)
+      }
+      .disposed(by: disposeBag)
   }
 
   private func configure(book: Book) {
