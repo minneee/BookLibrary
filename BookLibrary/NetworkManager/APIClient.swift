@@ -12,46 +12,25 @@ import Foundation
 final class APIClient {
   static let shared = APIClient()
   private let session: Session
-
+  
   private init() {
-    let configuration = URLSessionConfiguration.default
-    configuration.timeoutIntervalForRequest = 30
-    self.session = Session(configuration: configuration)
+    let config = URLSessionConfiguration.default
+    config.timeoutIntervalForRequest = 30
+    session = Session(configuration: config)
   }
-
-  func request<T: Decodable>(
-    _ url: URLConvertible,
-    method: HTTPMethod = .get,
-    parameters: Parameters? = nil
-  ) -> Single<T> {
-    let headers: HTTPHeaders = [
-      "Authorization": "KakaoAK \(APIKeyManager.kakao)"
-    ]
-
-    return Single.create { single in
-      let request = self.session.request(
-        url,
-        method: method,
-        parameters: parameters,
-        encoding: URLEncoding.default,
-        headers: headers
-      ).validate(statusCode: 200..<300)
+  
+  func request<T: Decodable>(_ api: URLRequestConvertible) -> Single<T> {
+    Single.create { observer in
+      let request = self.session.request(api)
+        .validate(statusCode: 200..<300)
         .responseDecodable(of: T.self) { response in
           switch response.result {
-          case .success(let value):
-            single(.success(value))
-          case .failure(let error):
-            single(.failure(error))
+          case .success(let value): observer(.success(value))
+          case .failure(let error): observer(.failure(error))
           }
         }
-
+      
       return Disposables.create { request.cancel() }
     }
-  }
-}
-
-extension APIClient {
-  func request<T: Decodable>(_ api: BookAPI) -> Single<T> {
-    request(api.url, method: api.method, parameters: api.parameters)
   }
 }

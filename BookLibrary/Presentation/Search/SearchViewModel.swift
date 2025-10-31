@@ -68,6 +68,8 @@ final class SearchViewModel {
 
   private func fetchBooks(booksRelay: BehaviorRelay<[Book]>, errorSubject: PublishSubject<String>) {
     useCase.execute(query: currentQuery, page: currentPage, size: pageSize)
+      .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
+      .observe(on: MainScheduler.instance)
       .subscribe(
         onSuccess: { [weak self] response in
           guard let self = self else { return }

@@ -37,16 +37,16 @@ final class BookCell: UICollectionViewCell {
     label.setContentCompressionResistancePriority(.required, for: .horizontal)
     return label
   }()
-  
-  private lazy var textStack: UIStackView = {
+
+  private var textStack: UIStackView = {
     let stack = UIStackView()
     stack.axis = .vertical
     stack.alignment = .leading
     stack.spacing = 4
     return stack
   }()
-  
-  private lazy var mainStack: UIStackView = {
+
+  private var mainStack: UIStackView = {
     let stack = UIStackView()
     stack.axis = .horizontal
     stack.alignment = .center
