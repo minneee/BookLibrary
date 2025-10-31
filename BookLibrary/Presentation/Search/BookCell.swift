@@ -10,7 +10,7 @@ import SnapKit
 
 final class BookCell: UICollectionViewCell {
   static let reuseIdentifier: String = "BookCell"
-
+  
   private let titleLabel: UILabel = {
     let label = UILabel()
     label.numberOfLines = 1
@@ -19,12 +19,12 @@ final class BookCell: UICollectionViewCell {
     label.font = .systemFont(ofSize: 16, weight: .semibold)
     return label
   }()
-
+  
   private let authorLabel: UILabel = {
     let label = UILabel()
     label.numberOfLines = 1
-        label.lineBreakMode = .byTruncatingTail
-        label.textAlignment = .left
+    label.lineBreakMode = .byTruncatingTail
+    label.textAlignment = .left
     label.textColor = .gray
     label.font = .systemFont(ofSize: 14, weight: .regular)
     return label
@@ -53,7 +53,7 @@ final class BookCell: UICollectionViewCell {
     stack.spacing = 12
     return stack
   }()
-
+  
   override init(frame: CGRect) {
     super .init(frame: frame)
     setupConfigures()
@@ -62,12 +62,6 @@ final class BookCell: UICollectionViewCell {
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
-  }
-
-  func configure(book: Book) {
-    titleLabel.text = book.title
-    authorLabel.text = book.authors.joined(separator: ", ")
-    priceLabel.text = "\(book.price)원"
   }
 }
 
@@ -83,7 +77,7 @@ extension BookCell {
       .forEach {
         contentView.addSubview($0)
       }
-
+    
     [
       titleLabel,
       authorLabel
@@ -91,7 +85,7 @@ extension BookCell {
       .forEach {
         textStack.addArrangedSubview($0)
       }
-
+    
     [
       textStack,
       priceLabel
@@ -99,14 +93,20 @@ extension BookCell {
       .forEach {
         mainStack.addArrangedSubview($0)
       }
-
+    
     setupConstraints()
   }
-
+  
   private func setupConstraints() {
     mainStack.snp.makeConstraints { make in
       make.top.bottom.equalToSuperview().inset(12)
       make.leading.trailing.equalToSuperview().inset(20)
     }
+  }
+  
+  func configure(book: Book) {
+    titleLabel.text = book.title
+    authorLabel.text = book.authors.joined(separator: ", ")
+    priceLabel.text = "\(book.price)원"
   }
 }
