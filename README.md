@@ -72,5 +72,6 @@ BookLibrary/
 
   ## 블로그 작성
   [뷰모델 transform 패턴으로 만들기](https://0minnie0.tistory.com/93)
+  [Xcode Instruments로 UIView 메모리 누수 잡기](https://0minnie0.tistory.com/95)
 
 
