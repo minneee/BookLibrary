@@ -8,8 +8,12 @@
 import UIKit
 import SnapKit
 import CoreData
+import RxSwift
+import RxCocoa
 
 class BookDetailViewController: UIViewController {
+  private let disposeBag = DisposeBag()
+
   private let scrollView: UIScrollView = {
     let scrollView = UIScrollView()
     scrollView.showsVerticalScrollIndicator = false
@@ -92,11 +96,17 @@ class BookDetailViewController: UIViewController {
   }()
 
   private let book: Book
-  private let useCase: SavedBooksUseCaseProtocol
+  private let savedBooksListViewModel: SavedBookListViewModel
+  private let recentBooksViewModel: RecentBooksViewModel
 
-  init(book: Book, useCase: SavedBooksUseCaseProtocol) {
+  init(
+    book: Book,
+    savedBooksListViewModel: SavedBookListViewModel,
+    recentBooksViewModel: RecentBooksViewModel
+  ) {
     self.book = book
-    self.useCase = useCase
+    self.savedBooksListViewModel = savedBooksListViewModel
+    self.recentBooksViewModel = recentBooksViewModel
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -111,11 +121,17 @@ class BookDetailViewController: UIViewController {
     bind()
     configure(book: book)
   }
+
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    NotificationCenter.default.post(name: .didDismissDetail, object: nil)
+  }
 }
 
 extension BookDetailViewController {
   private func setupConfigures() {
     view.backgroundColor = .white
+    recentBooksViewModel.useCase.addRecentBook(book)
   }
 
   private func setupViews() {
@@ -208,26 +224,28 @@ extension BookDetailViewController {
   }
 
   private func bind() {
-    cancelButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
-    addToLibraryButton.addTarget(self, action: #selector(addBook), for: .touchUpInside)
-  }
+    cancelButton.rx.tap
+      .bind { [weak self] in
+        self?.dismiss(animated: true)
+      }
+      .disposed(by: disposeBag)
 
-  @objc private func dismissView() {
-    dismiss(animated: true)
-  }
+    addToLibraryButton.rx.tap
+      .bind { [weak self] in
+        guard let self else { return }
+        self.savedBooksListViewModel.useCase.saveBook(self.book)
 
-  @objc private func addBook() {
-    useCase.saveBook(book)
-
-    let alert = UIAlertController(
-      title: "책 담기 완료 📚",
-      message: "‘\(book.title)’을(를) 내 서재에 추가했습니다.",
-      preferredStyle: .alert
-    )
-    alert.addAction(UIAlertAction(title: "확인", style: .default) { [weak self] _ in
-      self?.dismiss(animated: true)
-    })
-    present(alert, animated: true)
+        let alert = UIAlertController(
+          title: "책 담기 완료 📚",
+          message: "‘\(self.book.title)’을(를) 내 서재에 추가했습니다.",
+          preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+          self?.dismiss(animated: true)
+        })
+        self.present(alert, animated: true)
+      }
+      .disposed(by: disposeBag)
   }
 
   private func configure(book: Book) {
@@ -249,4 +267,8 @@ extension BookDetailViewController {
       thumbnailImageView.backgroundColor = .gray
     }
   }
+}
+
+extension Notification.Name {
+  static let didDismissDetail = Notification.Name("didDismissDetail")
 }

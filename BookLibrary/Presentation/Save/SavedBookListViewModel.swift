@@ -10,7 +10,7 @@ import RxCocoa
 import Foundation
 
 final class SavedBookListViewModel {
-  private let useCase: SavedBooksUseCaseProtocol
+  let useCase: SavedBooksUseCaseProtocol
   private let disposeBag = DisposeBag()
 
   let books = BehaviorRelay<[Book]>(value: [])

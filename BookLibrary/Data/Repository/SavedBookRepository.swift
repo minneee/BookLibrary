@@ -27,6 +27,13 @@ final class SavedBookRepository: SavedBookRepositoryProtocol {
   }
 
   func saveBook(_ book: Book) {
+    let request: NSFetchRequest<BookEntity> = BookEntity.fetchRequest()
+    request.predicate = NSPredicate(format: "title == %@", book.title)
+    
+    if let existing = try? context.fetch(request).first {
+      context.delete(existing)
+    }
+
     let entity = BookEntity(context: context)
     entity.title = book.title
     entity.contents = book.contents

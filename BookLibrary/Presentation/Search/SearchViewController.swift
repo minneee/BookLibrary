@@ -24,12 +24,25 @@ final class SearchViewController: UIViewController {
 
   private let bookListView = BookListView()
 
-  private let viewModel: SearchViewModel
-  private let useCase: SavedBooksUseCaseProtocol
+  private let mainStackView: UIStackView = {
+    let stack = UIStackView()
+    stack.axis = .vertical
+    stack.spacing = 30
+    return stack
+  }()
 
-  init(viewModel: SearchViewModel, useCase: SavedBooksUseCaseProtocol) {
-    self.viewModel = viewModel
-    self.useCase = useCase
+  private let searchViewModel: SearchViewModel
+  private let recentBooksViewModel: RecentBooksViewModel
+  private let savedBookListViewModel: SavedBookListViewModel
+
+  init(
+    searchViewModel: SearchViewModel,
+    recentBooksViewModel: RecentBooksViewModel,
+    savedBookListViewModel: SavedBookListViewModel
+  ) {
+    self.searchViewModel = searchViewModel
+    self.recentBooksViewModel = recentBooksViewModel
+    self.savedBookListViewModel = savedBookListViewModel
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -42,8 +55,11 @@ final class SearchViewController: UIViewController {
     setupConfigures()
     setupViews()
     bind()
+  }
 
-    recentlyReadBooks.bookColors.accept([.systemRed, .systemOrange, .systemYellow, .systemGreen, .systemRed, .systemOrange, .systemYellow, .systemGreen, .systemRed, .systemOrange, .systemYellow, .systemGreen])
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    recentBooksViewModel.fetchRecentBooks()
   }
 
   private func setupConfigures() {
@@ -54,11 +70,18 @@ final class SearchViewController: UIViewController {
   private func setupViews() {
     [
       searchBar,
+      mainStackView
+    ]
+      .forEach {
+        view.addSubview($0)
+      }
+
+    [
       recentlyReadBooks,
       bookListView
     ]
       .forEach {
-        view.addSubview($0)
+        mainStackView.addArrangedSubview($0)
       }
 
     setupConstraints()
@@ -70,16 +93,9 @@ final class SearchViewController: UIViewController {
       make.leading.trailing.equalToSuperview().inset(20)
     }
 
-    recentlyReadBooks.snp.makeConstraints { make in
-      make.top.equalTo(searchBar.snp.bottom).offset(12)
-      make.leading.trailing.equalToSuperview()
-      make.bottom.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
-    }
-
-    bookListView.snp.makeConstraints { make in
-      make.leading.trailing.equalToSuperview()
-      make.top.equalTo(recentlyReadBooks.snp.bottom).offset(30)
-      make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+    mainStackView.snp.makeConstraints { make in
+      make.top.equalTo(searchBar.snp.bottom).offset(20)
+      make.leading.trailing.bottom.equalToSuperview()
     }
   }
 
@@ -100,7 +116,7 @@ final class SearchViewController: UIViewController {
       loadNextPageTrigger: loadNextPageTrigger
     )
 
-    let output = viewModel.transform(input: input)
+    let output = searchViewModel.transform(input: input)
 
     output.books
       .drive(bookListView.bookRelay)
@@ -115,10 +131,17 @@ final class SearchViewController: UIViewController {
       })
       .disposed(by: disposeBag)
 
+    recentBooksViewModel.recentBooks
+      .drive(onNext: { [weak self] books in
+        guard let self = self else { return }
+        self.recentlyReadBooks.update(with: books)
+      })
+      .disposed(by: disposeBag)
+
     bookListView.selectedBook
       .subscribe { [weak self] book in
         guard let self else { return }
-        let detailVC = BookDetailViewController(book: book, useCase: useCase)
+        let detailVC = BookDetailViewController(book: book, savedBooksListViewModel: savedBookListViewModel, recentBooksViewModel: recentBooksViewModel)
 
         if let sheet = detailVC.sheetPresentationController {
           sheet.detents = [.large()]
@@ -128,6 +151,13 @@ final class SearchViewController: UIViewController {
         self.present(detailVC, animated: true)
       }
       .disposed(by: disposeBag)
+
+    NotificationCenter.default.rx.notification(.didDismissDetail)
+      .subscribe(onNext: { [weak self] _ in
+        self?.recentBooksViewModel.fetchRecentBooks()
+      })
+      .disposed(by: disposeBag)
+
   }
 }
 
