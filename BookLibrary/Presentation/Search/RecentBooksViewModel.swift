@@ -16,16 +16,22 @@ final class RecentBooksViewModel {
   private let _recentBooks = BehaviorRelay<[Book]>(value: [])
   var recentBooks: Driver<[Book]> { _recentBooks.asDriver() }
 
+  private let fetchTrigger = PublishRelay<Void>()
+
   init(useCase: RecentBooksUseCaseProtocol) {
     self.useCase = useCase
+
+    fetchTrigger
+      .flatMapLatest { [useCase] in
+        useCase.fetchRecentBooks(limit: 5)
+          .catchAndReturn([])
+      }
+      .observe(on: MainScheduler.instance)
+      .bind(to: _recentBooks)
+      .disposed(by: disposeBag)
   }
 
   func fetchRecentBooks() {
-    useCase.fetchRecentBooks(limit: 5)
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { [weak self] books in
-        self?._recentBooks.accept(books)
-      })
-      .disposed(by: disposeBag)
+    fetchTrigger.accept(())
   }
 }
