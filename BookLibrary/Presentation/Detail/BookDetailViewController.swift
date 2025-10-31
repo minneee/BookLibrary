@@ -96,13 +96,17 @@ class BookDetailViewController: UIViewController {
   }()
 
   private let book: Book
-  private let savedBooksUseCase: SavedBooksUseCaseProtocol
-  private let recentBooksUseCase: RecentBooksUseCaseProtocol
+  private let savedBooksListViewModel: SavedBookListViewModel
+  private let recentBooksViewModel: RecentBooksViewModel
 
-  init(book: Book, savedBooksUseCase: SavedBooksUseCaseProtocol, recentBooksUseCase: RecentBooksUseCaseProtocol) {
+  init(
+    book: Book,
+    savedBooksListViewModel: SavedBookListViewModel,
+    recentBooksViewModel: RecentBooksViewModel
+  ) {
     self.book = book
-    self.savedBooksUseCase = savedBooksUseCase
-    self.recentBooksUseCase = recentBooksUseCase
+    self.savedBooksListViewModel = savedBooksListViewModel
+    self.recentBooksViewModel = recentBooksViewModel
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -127,7 +131,7 @@ class BookDetailViewController: UIViewController {
 extension BookDetailViewController {
   private func setupConfigures() {
     view.backgroundColor = .white
-    recentBooksUseCase.addRecentBook(book)
+    recentBooksViewModel.useCase.addRecentBook(book)
   }
 
   private func setupViews() {
@@ -229,7 +233,7 @@ extension BookDetailViewController {
     addToLibraryButton.rx.tap
       .bind { [weak self] in
         guard let self else { return }
-        self.savedBooksUseCase.saveBook(self.book)
+        self.savedBooksListViewModel.useCase.saveBook(self.book)
 
         let alert = UIAlertController(
           title: "책 담기 완료 📚",

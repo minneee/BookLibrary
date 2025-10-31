@@ -10,7 +10,7 @@ import RxSwift
 import RxCocoa
 
 final class RecentBooksViewModel {
-  private let useCase: RecentBooksUseCaseProtocol
+  let useCase: RecentBooksUseCaseProtocol
   private let disposeBag = DisposeBag()
 
   private let _recentBooks = BehaviorRelay<[Book]>(value: [])

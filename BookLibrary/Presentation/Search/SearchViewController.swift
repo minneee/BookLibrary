@@ -33,14 +33,16 @@ final class SearchViewController: UIViewController {
 
   private let searchViewModel: SearchViewModel
   private let recentBooksViewModel: RecentBooksViewModel
-  private let saveBookUseCase: SavedBooksUseCaseProtocol
-  private let recentBooksUseCase: RecentBooksUseCaseProtocol
+  private let savedBookListViewModel: SavedBookListViewModel
 
-  init(searchViewModel: SearchViewModel, recentBooksViewModel: RecentBooksViewModel, saveBookUseCase: SavedBooksUseCaseProtocol, recentBooksUseCase: RecentBooksUseCaseProtocol) {
+  init(
+    searchViewModel: SearchViewModel,
+    recentBooksViewModel: RecentBooksViewModel,
+    savedBookListViewModel: SavedBookListViewModel
+  ) {
     self.searchViewModel = searchViewModel
     self.recentBooksViewModel = recentBooksViewModel
-    self.saveBookUseCase = saveBookUseCase
-    self.recentBooksUseCase = recentBooksUseCase
+    self.savedBookListViewModel = savedBookListViewModel
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -139,7 +141,7 @@ final class SearchViewController: UIViewController {
     bookListView.selectedBook
       .subscribe { [weak self] book in
         guard let self else { return }
-        let detailVC = BookDetailViewController(book: book, savedBooksUseCase: saveBookUseCase, recentBooksUseCase: recentBooksUseCase)
+        let detailVC = BookDetailViewController(book: book, savedBooksListViewModel: savedBookListViewModel, recentBooksViewModel: recentBooksViewModel)
 
         if let sheet = detailVC.sheetPresentationController {
           sheet.detents = [.large()]

@@ -28,15 +28,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     let searchRepository = BookRepository()
     let searchUseCase = SearchBooksUseCase(repository: searchRepository)
+    let searchviewModel = SearchViewModel(useCase: searchUseCase)
 
     let savedBookRepository = SavedBookRepository()
     let savedBookUseCase = SavedBooksUseCase(repository: savedBookRepository)
-    let searchviewModel = SearchViewModel(useCase: searchUseCase)
+    let savedBookViewModel = SavedBookListViewModel(useCase: savedBookUseCase)
 
     let recentBooksRepository = RecentBookRepository()
     let recentBooksUseCase = RecentBooksUseCase(repository: recentBooksRepository)
     let recentBooksViewModel = RecentBooksViewModel(useCase: recentBooksUseCase)
-    let searchVC = UINavigationController(rootViewController: SearchViewController(searchViewModel: searchviewModel, recentBooksViewModel: recentBooksViewModel, saveBookUseCase: savedBookUseCase, recentBooksUseCase: recentBooksUseCase))
+    let searchVC = UINavigationController(rootViewController: SearchViewController(searchViewModel: searchviewModel, recentBooksViewModel: recentBooksViewModel, savedBookListViewModel: savedBookViewModel))
 
     let savedRepository = SavedBookRepository()
     let savedUseCase = SavedBooksUseCase(repository: savedRepository)
