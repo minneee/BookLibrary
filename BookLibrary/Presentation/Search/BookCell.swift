@@ -53,11 +53,16 @@ final class BookCell: UICollectionViewCell {
     stack.spacing = 12
     return stack
   }()
-  
+
+  private var didSetupViews = false
+
   override init(frame: CGRect) {
     super .init(frame: frame)
     setupConfigures()
-    setupViews()
+    if !didSetupViews {
+      setupViews()
+      didSetupViews = true
+    }
   }
   
   required init?(coder: NSCoder) {

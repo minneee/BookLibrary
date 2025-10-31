@@ -107,7 +107,7 @@ extension BookListView {
   }
 
   private func bind() {
-    bookRelay.bind(to: collectionView.rx.items(cellIdentifier: BookCell.reuseIdentifier, cellType: BookCell.self)) { index, element, cell in
+    bookRelay.bind(to: collectionView.rx.items(cellIdentifier: BookCell.reuseIdentifier, cellType: BookCell.self)) { [weak self] index, element, cell in
       cell.configure(book: element)
     }
     .disposed(by: disposeBag)

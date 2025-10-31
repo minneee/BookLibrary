@@ -87,7 +87,7 @@ final class SavedBookListViewController: UIViewController {
     // 리스트 바인딩
     viewModel.books
       .asObservable()
-      .bind(to: tableView.rx.items(cellIdentifier: SavedBookCell.reuseIdentifier, cellType: SavedBookCell.self)) { _, book, cell in
+      .bind(to: tableView.rx.items(cellIdentifier: SavedBookCell.reuseIdentifier, cellType: SavedBookCell.self)) { [weak self] _, book, cell in
         cell.configure(book: book)
       }
       .disposed(by: disposeBag)
